@@ -1,0 +1,38 @@
+/* Styles pour centrer le bouton */
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    grid-row: auto;
+    gap:50px;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+h1{
+color:#4CAF50;
+
+}
+
+.container {
+    display: flex; /* Active le mode Flexbox */
+    flex-direction: column; /* Aligne les éléments verticalement */
+    align-items: center; /* Centre les éléments horizontalement */
+    gap: 10px; /* Espacement entre les boutons */
+}

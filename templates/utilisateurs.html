@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des utilisateurs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+            background-color: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        #refresh-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #refresh-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Liste des utilisateurs</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Classe</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="users-table-body">
+            <!-- Les lignes seront insérées ici via JavaScript -->
+        </tbody>
+    </table>
+    <button id="refresh-button">Recharger la liste</button>
+    <a href="/">Retour à l'accueil</a>
+
+    <script>
+        // Fonction pour charger les utilisateurs via AJAX
+        async function loadUsers() {
+            try {
+                const response = await fetch('/utilisateurs/api'); // Appelle une nouvelle route API
+                const users = await response.json();
+
+                const tableBody = document.getElementById('users-table-body');
+                tableBody.innerHTML = ''; // Vide le tableau avant de l'actualiser
+
+                // Ajoute les nouvelles données au tableau
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.id_user || ''}</td>
+                        <td>${user.nom || ''}</td>
+                        <td>${user.prenom || ''}</td>
+                        <td>${user.classe || ''}</td>
+                        <td>${user.date || ''}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement des utilisateurs :', error);
+            }
+        }
+
+        // Charge les utilisateurs au chargement de la page
+        window.onload = loadUsers;
+
+        // Recharger la liste lorsque le bouton est cliqué
+        document.getElementById('refresh-button').addEventListener('click', loadUsers);
+    </script>
+</body>
+</html>

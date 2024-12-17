@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des utilisations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+            background-color: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        #refresh-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #refresh-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Liste des utilisations</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID Utilisateur</th>
+                <th>Nombre d'Utilisations</th>
+                <th>Date</th>
+                <th>Slot</th>
+            </tr>
+        </thead>
+        <tbody id="utilisations-table-body">
+            <!-- Les lignes seront insérées ici via JavaScript -->
+            {% for utilisation in utilisations %}
+                <tr>
+                    <td>{{ utilisation.Id_user or 'N/A' }}</td>
+                    <td>{{ utilisation.nb_utilisations or 'N/A' }}</td>
+                    <td>{{ utilisation.date or 'N/A' }}</td>
+                    <td>{{ utilisation.slot or 'N/A' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button id="refresh-button">Recharger la liste</button>
+    <a href="/">Retour à l'accueil</a>
+
+    <script>
+        // Fonction pour charger les utilisations via AJAX
+        async function loadUtilisations() {
+            try {
+                const response = await fetch('/utilisations/api'); // Appelle une nouvelle route API
+                const utilisations = await response.json();
+
+                const tableBody = document.getElementById('utilisations-table-body');
+                tableBody.innerHTML = ''; // Vide le tableau avant de l'actualiser
+
+                // Ajoute les nouvelles données au tableau
+                utilisations.forEach(utilisation => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${utilisation.Id_user || ''}</td>
+                        <td>${utilisation.nb_utilisations || ''}</td>
+                        <td>${utilisation.date || ''}</td>
+                        <td>${utilisation.slot || ''}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement des utilisations :', error);
+            }
+        }
+
+        // Charge les utilisations au chargement de la page
+        window.onload = loadUtilisations;
+
+        // Recharger la liste lorsque le bouton est cliqué
+        document.getElementById('refresh-button').addEventListener('click', loadUtilisations);
+    </script>
+</body>
+</html>
