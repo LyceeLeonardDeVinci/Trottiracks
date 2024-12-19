@@ -123,7 +123,7 @@ def submit():
     elif not surname:
         message = "Prénom non fourni."
     elif not classe:
-        message = "Classe non fourni."
+        message = "Classe non fournie."
     else:
         # Créer un nouvel objet User et l'ajouter à la base de données
         conn = get_db_connection()
