@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Slots</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+            background-color: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .update-button {
+            padding: 5px 10px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .update-button:hover {
+            background-color: #218838;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Liste des Slots</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Numéro</th>
+                <th>Libre</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="slots-table-body">
+            <!-- Les lignes seront insérées ici via JavaScript -->
+        </tbody>
+    </table>
+    <a href="/" class="button">Retour à l'accueil</a>
+
+    <div id="error-message" class="error-message"></div>
+
+    <script>
+        // Fonction pour charger les slots via AJAX
+        async function loadSlots() {
+            try {
+                const response = await fetch('/slots/api');
+                if (!response.ok) {
+                    throw new Error("Erreur lors du chargement des slots");
+                }
+
+                const slots = await response.json();
+                const tableBody = document.getElementById('slots-table-body');
+                tableBody.innerHTML = ''; // Vide le tableau avant de l'actualiser
+
+                // Vérifie si les slots sont bien reçus
+                if (slots.length === 0) {
+                    document.getElementById('error-message').textContent = "Aucun slot disponible.";
+                } else {
+                    document.getElementById('error-message').textContent = ''; // Efface le message d'erreur si des slots existent
+                }
+
+                // Remplir le tableau avec les slots
+                slots.forEach(slot => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${slot.id_slot}</td>
+                        <td>${slot.numéro}</td>
+                        <td>${slot.libre ? "Oui" : "Non"}</td>
+                        <td>
+                            <button class="update-button" onclick="toggleSlot(${slot.id_slot}, ${slot.libre})">
+                                ${slot.libre ? "Occuper" : "Libérer"}
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement des slots :', error);
+                document.getElementById('error-message').textContent = "Impossible de charger les slots. Veuillez réessayer.";
+            }
+        }
+
+        // Fonction pour mettre à jour l'état d'un slot
+        async function toggleSlot(id, currentState) {
+            const newState = currentState ? 0 : 1; // Inverse l'état actuel
+            try {
+                const response = await fetch(`/slots/update/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `libre=${newState}`,
+                });
+                if (response.ok) {
+                    loadSlots(); // Recharge la liste des slots
+                } else {
+                    console.error('Erreur lors de la mise à jour du slot');
+                    alert('Erreur lors de la mise à jour du slot');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour du slot :', error);
+                alert('Impossible de mettre à jour le slot.');
+            }
+        }
+
+        // Charge les slots au chargement de la page
+        window.onload = loadSlots;
+    </script>
+</body>
+</html>

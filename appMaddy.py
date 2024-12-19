@@ -101,7 +101,7 @@ def update_slot(id):
     conn.close()
 
     return jsonify({"message": "État du slot mis à jour avec succès."}), 200
-#--------------------------------------------------------SLOT---------------------------------------------------------
+
 # ---------------------------------------------------- Formulaire ----------------------------------------------------
 
 # Route pour afficher le formulaire HTML
