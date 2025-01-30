@@ -1,18 +1,56 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect, make_response
 import sqlite3
 
 app = Flask(__name__)
 
-# Fonction pour obtenir la connexion à la base de données SQLite
 def get_db_connection():
-    conn = sqlite3.connect('L:/ELEVES-TSTI2D_2/SIN/DOC PROJET/trottiracks.db')  # Chemin vers votre base de données
-    conn.row_factory = sqlite3.Row  # Permet d'accéder aux résultats comme des dictionnaires
-    return conn
+    con = sqlite3.connect("c:/tmp/trottiracks.db")
+    con.row_factory = sqlite3.Row
+    return con
 
-# Route principale pour tester si l'application fonctionne
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
-        return app.send_static_file('index.html')
+    nom = None
+    if 'username' in request.cookies:
+        nom = "Maddy"    
+    return render_template('accueil.html', nom=nom)
+    # return app.send_static_file('index.html')  # Simplement afficher le fichier index.html
+
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html', message=None)  # Aucun message d'erreur par défaut
+    elif request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        conn = get_db_connection()
+        
+        # Requête sécurisée pour éviter les injections SQL
+        user = conn.execute("SELECT * FROM User WHERE username = ?", (username,)).fetchone()
+
+        if user:
+            # Vérifie si le mot de passe correspond
+            if user["motdepasse"] == password:
+                # Crée une réponse pour rediriger vers la page d'accueil
+                response = make_response(redirect('/'))
+                # Ajoute un cookie (par exemple, stocker le nom d'utilisateur)
+                response.set_cookie('username', username, max_age=3600)  # Expire après 1 heure
+                return response
+            else:
+                # Mauvais mot de passe
+                return render_template('login.html', message="Mot de passe incorrect.")
+        else:
+            # Utilisateur non trouvé
+            return render_template('login.html', message="Nom d'utilisateur introuvable.")
+
+@app.route("/logout", methods=["GET"])
+def logout():
+    response = make_response(render_template('login.html', message="Déconnecté avec succès."))
+    response.set_cookie('username', '', max_age=0)  # Supprime le cookie
+    return response
 
 # Route pour afficher les utilisateurs dans une page HTML
 @app.route("/utilisateurs", methods=["GET"])
@@ -115,31 +153,42 @@ def submit():
     # Récupérer les données envoyées par le formulaire
     name = request.form.get('name')
     surname = request.form.get('surname')
+    username = request.form.get('username')
     classe = request.form.get('classe')
+    motdepasse = request.form.get('motdepasse')
     
     # Vérifier si un nom a été fourni
     if not name:
         message = "Nom non fourni."
     elif not surname:
         message = "Prénom non fourni."
+    elif not username:
+        message = "Nom d'utilisateur non fourni."
     elif not classe:
-        message = "Classe non fournie."
+        message = "Classe non fourni."
+    elif not motdepasse:
+        message = "Mot de passe non fourni."
     else:
         # Créer un nouvel objet User et l'ajouter à la base de données
-        conn = get_db_connection()
-        users = conn.execute(f"""
-            INSERT INTO User (nom, prenom, classe, date)
-            VALUES
-                ('{name}', '{surname}', '{classe}', '2024-12-17 09:45:16');
-            """)  # Ajouter l'objet User à la session
-        conn.commit()  # Sauvegarder les changements dans la base de données
-        
-        message = f"Bonjour {name} {surname} votre compte à été ajouté avec succès !"  
+        try:            
+            conn = get_db_connection()
+            users = conn.execute(f"""
+                INSERT INTO User (nom, prenom, username, classe, motdepasse)
+                VALUES
+                    ('{name}', '{surname}','{username}', '{classe}', '{motdepasse}');
+                """)  # Ajouter l'objet User à la session
+            conn.commit()  # Sauvegarder les changements dans la base de données
+        except sqlite3.IntegrityError:
+            print("couldn't add twice")    
+            return render_template('formulaire.html', message="Le nom d'utilisateur existe déjà")
+            
+        message = f"Bonjour {surname} votre compte à été ajouté avec succès !"  
     
     # Rendre la page avec un message
     return render_template('formulaire.html', message=message)
 
 # ---------------------------------------------------- Formulaire ----------------------------------------------------
+
 
 # Lancement du serveur Flask
 if __name__ == "__main__":

@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/style_form.css">
-    <title>Formulaire Flask</title>
+    <title>créer un compte</title>
 </head>
 <body>
-    <h1>Ajouter des données</h1>
+    <h1>Création Du Compte</h1>
     
+    
+
     <!-- Formulaire pour envoyer des données par méthode POST -->
     <form action="/submit" method="POST">
 
@@ -19,15 +21,39 @@
     <!-- prenom -->
         <label for="surname">Prénom :</label>
         <input type="text" id="surname" name="surname" required>
+     <!-- username -->
+     <label for="username">Nom d'utilisateur :</label>
+     <input type="text" id="username" name="username" required>
     <!-- classe -->
         <label for="classe">Classe :</label>
         <input type="text" id="classe" name="classe" required>
+    <!-- mot de passe-->
+        <label for ="mot de passe">Créer un mot de passe :</label>
+        <div>
+            <input type="password" id="motdepasse" name="motdepasse" required> 
+            <input type="checkbox" id="showPassword">
+        </div>
+
+      
+        
 
 
-        <button type="submit">Envoyer</button>
+        <button type="submit">créer mon compte</button>
     </form>
 
-    <button onclick="window.location.href = 'http://127.0.0.1:5000/utilisateurs';">Voir la base de donnés</button>
+
+
+    <script>
+        // Ajout d'un événement pour afficher ou masquer le mot de passe
+        document.getElementById('showPassword').addEventListener('change', function() {
+            const passwordField = document.getElementById('motdepasse');
+            if (this.checked) {
+                passwordField.type = 'text'; // Affiche le texte
+            } else {
+                passwordField.type = 'password'; // Masque le texte
+            }
+        });
+    </script>
 
 
 
@@ -35,6 +61,10 @@
     <!-- Affichage du message de retour -->
     {% if message %}
         <p>{{ message }}</p>
+        <a href="/">
+            <button id="retour-button">Retour à l'accueil</button>
+        </a>
+    
     {% endif %}
 </body>
 </html>
