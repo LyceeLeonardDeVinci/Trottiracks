@@ -193,3 +193,7 @@ def submit():
 # Lancement du serveur Flask
 if __name__ == "__main__":
     app.run(debug=True)
+
+# Si creation du serveur par gunicorn
+def create_app(test_config=None):
+  return app
