@@ -48,6 +48,15 @@ input[type="text"] {
     font-size: 16px;
     box-sizing: border-box;
 }
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
 
 /* Bouton de soumission */
 button[type="submit"] {
@@ -72,14 +81,13 @@ button {
     background-color: #007BFF;
     color: white;
     border: none;
-    padding: 12px 20px;
+    padding: 10px 10px;
     text-align: center;
     font-size: 16px;
     border-radius: 4px;
     cursor: pointer;
     display: block;
     margin-top: 20px;
-    width: 15%;
     transition: background-color 0.3s;
 }
 
@@ -91,6 +99,24 @@ button:hover {
 p {
     text-align: center;
     font-size: 16px;
-    color: green;
+    color: rgb(0, 0, 0);
     margin-top: 20px;
+    
+}
+
+
+a {
+    text-decoration: none;
+}
+div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+head{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }

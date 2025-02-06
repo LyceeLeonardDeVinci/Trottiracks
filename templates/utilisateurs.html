@@ -35,6 +35,9 @@
         tr:hover {
             background-color: #ddd;
         }
+        a {
+            text-decoration: none;
+        }
         #refresh-button {
             display: block;
             margin: 20px auto;
@@ -46,8 +49,22 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        #retour-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #223447;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
         #refresh-button:hover {
             background-color: #0056b3;
+        }
+        #retour-button:hover {
+            background-color: #3c5b7c;
         }
         .delete-button {
             padding: 5px 10px;
@@ -70,8 +87,10 @@
                 <th>ID</th>
                 <th>Nom</th>
                 <th>Prénom</th>
+                <th>Nom D'utilisateur</th>
                 <th>Classe</th>
                 <th>Date</th>
+                <th>Mot De Passe</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -80,7 +99,10 @@
         </tbody>
     </table>
     <button id="refresh-button">Recharger la liste</button>
-    <a href="/">Retour à l'accueil</a>
+    <a href="/">
+        <button id="retour-button">Retour à l'accueil</button>
+    </a>
+
 
     <script>
         // Fonction pour charger les utilisateurs via AJAX
@@ -99,8 +121,10 @@
                         <td>${user.id_user || ''}</td>
                         <td>${user.nom || ''}</td>
                         <td>${user.prenom || ''}</td>
+                        <td>${user.username || ''}</td>
                         <td>${user.classe || ''}</td>
                         <td>${user.date || ''}</td>
+                        <td>${user.motdepasse || ''}</td>
                         <td><button class="delete-button" onclick="deleteUser(${user.id_user})">Supprimer</button></td>
                     `;
                     tableBody.appendChild(row);

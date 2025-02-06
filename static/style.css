@@ -1,38 +1,186 @@
 /* Styles pour centrer le bouton */
 body, html {
     height: 100%;
+    width: 100%;
     margin: 0;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     font-family: Arial, sans-serif;
-    grid-row: auto;
-    gap:50px;
+    flex-direction: column;
+    background-image: url("https://images.frandroid.com/wp-content/uploads/2022/09/xiaomi-electric-scooter3-lite-1-scaled.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 button {
-    padding: 15px 30px;
+    height: 50px;
+    width: 200px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #4CAF50;
+
+    color: rgb(22, 22, 22);
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    border-color: #222222;
+    border: solid;
+    border-width: 2px;
+}
+
+button:hover {
+    background-color: #000000;
+    border-color: #000000;
+    border-width: 2px;
     color: white;
+}
+
+
+
+.footer {
+    height: 50px;
+    width: 150px;
+    font-size: 16px;
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+    background-color: #00000000;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    
+}
+
+.footer:hover {
+    background-color: #45a04900;
+    color: rgb(0, 0, 0);
+    text-decoration: underline;
+    border: none;
+}
+
+
+
+
+h1 {
+    color: #222222;
+}
+
+.container {
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+    gap: 10px;
+}
+
+/* Positionner le pseudonyme et le bouton de déconnexion en haut à droite */
+.user-info {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.user-info span {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.user-info button {
+    font-size: 14px;
+    background-color: #f44336; /* Rouge pour le bouton de déconnexion */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.user-info button:hover {
+    background-color: #d32f2f;
+}
+
+/*------------------------------------------------------page acceuil-------------------------------------------------------------------*/
+
+header {
+    background-color: #ffffff00;
+    padding: 0.5em 0;
+    justify-content: start;
+    width: 100%;
+    border-radius:0px;
+}
+nav {
+    display: flex;
+    padding: 1em 0;
+    justify-content: center;
+    background-color: #33333300;
+    gap:50px;
+
+
+}
+nav a {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    padding: 1em;
+
+}
+nav a:hover {
+    background-color: #575757;
+}
+.hero {
+    text-align: center;
+    padding: 2em 5em;
+    background: url('hero-image.jpg') no-repeat center center/cover;
+    color: rgb(0, 0, 0);
+    background-color: #ffffff9a;
+}
+.hero h1 {
+    font-size: 3em;
+}
+.content {
+    height: 50%;
+    width: 100%;
+    text-align: center;
+
+}
+.trspar {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    
+}
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 0.5em 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.connect {
+    text-align: right ;
+    background-color: #ffffff00;
+
+
+    
+}
+
+.utilisateur{
+    height: 50px;
+    width: 150px;
+    font-size: 16px;
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+    background-color: #00000000;
     border: none;
     border-radius: 5px;
     transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #45a049;
-}
-
-h1{
-color:#4CAF50;
-
-}
-
-.container {
-    display: flex; /* Active le mode Flexbox */
-    flex-direction: column; /* Aligne les éléments verticalement */
-    align-items: center; /* Centre les éléments horizontalement */
-    gap: 10px; /* Espacement entre les boutons */
+.utilisateur:hover{
+    background-color: #45a04900;
+    color: rgb(0, 0, 0);
+    text-decoration: underline;
+    border: none;
 }

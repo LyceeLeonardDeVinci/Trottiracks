@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style_form.css">
+    <title>Se connecter</title>
+    <style>
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Se connecter</h1>
+    
+    <!-- Affiche un message d'erreur si 'message' est défini -->
+    {% if message %}
+        <p class="error">{{ message }}</p>
+    {% endif %}
+    
+    <form action="/login" method="POST">
+        <label for="username">Nom d'utilisateur :</label>
+        <input type="text" id="username" name="username" required>
+        
+        <label for="password">Mot de passe :</label>
+        <div>
+        <input type="password" id="password" name="password" required>
+        <input type="checkbox" id="showPassword">
+        </div>
+
+        <button type="submit">Se connecter</button>
+    </form>
+
+    <script>
+        // Ajout d'un événement pour afficher ou masquer le mot de passe
+        document.getElementById('showPassword').addEventListener('change', function() {
+            const passwordField = document.getElementById('password');
+            if (this.checked) {
+                passwordField.type = 'text'; // Affiche le texte
+            } else {
+                passwordField.type = 'password'; // Masque le texte
+            }
+        });
+    </script>
+
+
+
+</body>
+</html>

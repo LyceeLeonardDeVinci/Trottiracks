@@ -1,18 +1,37 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page avec bouton centré</title>
+    <title>ACCEUIL</title>
     <link rel="stylesheet" href="/static/style.css">
+
 </head>
 <body>
+    <section class="content">
+    </section>
+    <div>
+        <button onclick="window.location.href = '/login';" class="footer">se connecter</button>
+        <button onclick="window.location.href = '/formulaire';" class="footer">crée un compte</button>
+        <button onclick="window.location.href = '/utilisateurs';" class="footer">Voir la base de donnés</button>
 
-    <div class="container">
-        <button onclick="window.location.href = 'http://127.0.0.1:5000/utilisateurs';">db users</button>
-        </button><button onclick="window.location.href = 'http://127.0.0.1:5000/formulaire';">formulaire</button>
     </div>
+    <header>
+        <section class="hero">
+            <h1>TROTTIRACK'S</h1>
+            <p>Le déplacement simplement. </p>
+        </section>
+        
+        <nav>
+            <button onclick="window.location.href = '/slots';">Voir les racks disponible</button>
+           
+        </nav>
+    </header>
 
+
+    <footer>
+
+        <p>&copy; 2025 trottirack's. tous droits réservés.</p>
+    </footer>
 </body>
 </html>
-
