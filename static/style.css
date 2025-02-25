@@ -176,10 +176,6 @@ footer {
     border: none;
     border-radius: 5px;
     transition: background-color 0.3s;
-    background-color: #45a04900;
-    border-color: #222222;
-    border: solid;
-    border-width: 2px;
 }
 
 .utilisateur:hover{
@@ -188,89 +184,3 @@ footer {
     text-decoration: underline;
     border: none;
 }
-
-/* Positionner le pseudonyme et le bouton de déconnexion en haut à droite */
-.user-info {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.user-info span {
-    margin-right: 10px;
-    font-weight: bold;
-}
-
-.user-info button {
-    font-size: 14px;
-    background-color: #f44336; /* Rouge pour le bouton de déconnexion */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-.user-info button:hover {
-    background-color: #d32f2f;
-}
-
-/*------------------------------------------------------page acceuil-------------------------------------------------------------------*/
-
-header {
-    background-color: #ffffff98;
-    color: white;
-    padding: 1em 0;
-    text-align: center;
-    width: 50%;
-    border-radius: 1%;
-}
-nav {
-    display: flex;
-    padding: 1em 0;
-    justify-content: center;
-    background-color: #33333300;
-    gap:50px;
-}
-nav a {
-    color: white;
-    text-decoration: none;
-    padding: 1em;
-}
-nav a:hover {
-    background-color: #575757;
-}
-.hero {
-    text-align: center;
-    padding: 1em 1em;
-    background: url('hero-image.jpg') no-repeat center center/cover;
-    color: rgb(0, 0, 0);
-}
-.hero h1 {
-    font-size: 3em;
-}
-.content {
-    height: 50%;
-    width: 100%;
-    text-align: center;
-
-}
-.trspar {
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    
-}
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 0.5em 0;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-

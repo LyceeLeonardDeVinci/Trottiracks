@@ -33,15 +33,24 @@
             <input type="password" id="motdepasse" name="motdepasse" required> 
             <input type="checkbox" id="showPassword">
         </div>
-
-      
+    <!-- confirmation mot de passe-->
+        <label for ="cmot de passe">Confirmer votre mot de passe :</label>
+        <div>
+            <input type="password" id="cmotdepasse" name="cmotdepasse" required> 
+            <input type="checkbox" id="showConfirmPassword">
+        </div>
+        <div>
+        <input type="checkbox">
+        <label> Conditions d'utilisations </label>
+        </div>
         
 
 
         <button type="submit">créer mon compte</button>
+        
     </form>
-
-
+    <button onclick="window.location.href = '/';">retour</button>
+    
 
     <script>
         // Ajout d'un événement pour afficher ou masquer le mot de passe
@@ -55,6 +64,17 @@
         });
     </script>
 
+<script>
+    // Ajout d'un événement pour afficher ou masquer le mot de passe
+    document.getElementById('showConfirmPassword').addEventListener('change', function() {
+        const passwordField = document.getElementById('cmotdepasse');
+        if (this.checked) {
+            passwordField.type = 'text'; // Affiche le texte
+        } else {
+            passwordField.type = 'password'; // Masque le texte
+        }
+    });
+</script>
 
 
 

@@ -1,12 +1,40 @@
 from flask import Flask, render_template, jsonify, request, redirect, make_response
 import sqlite3
+import os
 
 app = Flask(__name__)
 
+
+
+
 def get_db_connection():
-    con = sqlite3.connect("./trottiracks.db")
-    con.row_factory = sqlite3.Row
-    return con
+    # Specify the file path
+    file_path = "trottiracks.db"
+
+    # Check if the file exists
+    if os.path.exists(file_path):
+        print("The file exists.")
+        con = sqlite3.connect("trottiracks.db")
+        con.row_factory = sqlite3.Row
+        return con
+    else:
+        print("The file does not exist.")   
+        con = sqlite3.connect("trottiracks.db")
+        con.row_factory = sqlite3.Row
+        # Créer les tables
+        con.execute("""CREATE TABLE "User" (
+            "id_user"	INTEGER,
+            "nom"	TEXT NOT NULL,
+            "prenom"	TEXT NOT NULL,
+            "username"	TEXT NOT NULL UNIQUE,
+            "classe"	TEXT NOT NULL,
+            "date"	INTEGER DEFAULT current_timestamp,
+            "motdepasse"	TEXT NOT NULL,
+            PRIMARY KEY("id_user" AUTOINCREMENT)
+        );""")
+
+        return con 
+
 
 @app.route("/", methods=["GET"])
 def home():
@@ -41,10 +69,10 @@ def login():
                 return response
             else:
                 # Mauvais mot de passe
-                return render_template('login.html', message="Mot de passe incorrect.")
+                return render_template('login.html', message="Mot de passe ou nom d'utilisateur incorrect.")
         else:
             # Utilisateur non trouvé
-            return render_template('login.html', message="Nom d'utilisateur introuvable.")
+            return render_template('login.html', message="Mot de passe ou nom d'utilisateur incorrect.")
 
 @app.route("/logout", methods=["GET"])
 def logout():
@@ -156,7 +184,7 @@ def submit():
     username = request.form.get('username')
     classe = request.form.get('classe')
     motdepasse = request.form.get('motdepasse')
-    
+    confirmationmotdepasse = request.form.get('cmotdepasse')
     # Vérifier si un nom a été fourni
     if not name:
         message = "Nom non fourni."
@@ -168,6 +196,11 @@ def submit():
         message = "Classe non fourni."
     elif not motdepasse:
         message = "Mot de passe non fourni."
+    elif not confirmationmotdepasse:
+        message = "Mot de passe non fourni."
+    # Vérifie si le mot de passe correspond
+    elif motdepasse != confirmationmotdepasse:
+        message = "Les mots de passe ne correspondent pas."
     else:
         # Créer un nouvel objet User et l'ajouter à la base de données
         try:            
@@ -194,6 +227,8 @@ def submit():
 if __name__ == "__main__":
     app.run(debug=True)
 
-# Si creation du serveur par gunicorn
-def create_app(test_config=None):
-  return app
+
+
+
+
+
