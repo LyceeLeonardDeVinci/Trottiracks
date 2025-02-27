@@ -135,7 +135,7 @@ def ouvert():
 @app.route("/slots", methods=["GET"])
 def get_slots():
     conn = get_db_connection()
-    slots = conn.execute("SELECT * FROM Slots;").fetchall()  # Récupère tous les slots
+    slots = conn.execute("SELECT * FROM slots;").fetchall()  # Récupère tous les slots
     conn.close()
 
     # Convertit les résultats en une liste de dictionnaires

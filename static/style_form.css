@@ -92,7 +92,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #237bda;
 }
 
 /* Message de retour */
@@ -118,5 +118,19 @@ head{
     display: flex;
     justify-content: center;
     align-items: center;
+
+}
+
+.newcompte{
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s;
 
 }

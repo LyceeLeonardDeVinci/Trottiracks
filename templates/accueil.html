@@ -18,11 +18,9 @@
     <header>
         
         <div class="connect">
-            <button onclick="window.location.href = '/login';" class="footer">se connecter</button>
+            <button onclick="window.location.href = '/login';" class="footer">Se connecter</button>
             {% if nom %}
             <button class="utilisateur" onclick="window.location.href = '/formulaire';" class="footer">salut {{ nom }}</button>
-            {% else %}    
-            <button onclick="window.location.href = '/formulaire';" class="footer">crée un compte</button>
             {% endif %}
             <button onclick="window.location.href = '/utilisateurs';" class="footer">base de donnés</button>
         </div>
