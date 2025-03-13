@@ -237,6 +237,44 @@ def user_info():
     else:
         return redirect('/login')
 
+# Route to display slots reservation page
+@app.route("/reserve_slot", methods=["GET"])
+def reserve_slot():
+    username = request.cookies.get('username')
+    if not username:
+        return redirect('/login')
+    return render_template("slots.html")
+
+# Route to handle slot reservation
+@app.route("/reserve_slot", methods=["POST"])
+def reserve_slot_post():
+    data = request.get_json()
+    title = data.get('title')
+    start = data.get('start')
+    end = data.get('end')
+    username = request.cookies.get('username')
+
+    if not username:
+        return jsonify({"error": "Unauthorized access"}), 403
+
+    conn = get_db_connection()
+    conn.execute("""
+        INSERT INTO Reservations (title, start, end, username)
+        VALUES (?, ?, ?, ?);
+    """, (title, start, end, username))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Réservation effectuée avec succès."}), 200
+
+# API route to return reserved slots in JSON
+@app.route("/slots/api", methods=["GET"])
+def get_reserved_slots_api():
+    conn = get_db_connection()
+    slots = conn.execute("SELECT * FROM Reservations;").fetchall()
+    conn.close()
+    slots_list = [dict(slot) for slot in slots]
+    return jsonify(slots_list)
+
 # Run Flask server
 if __name__ == "__main__":
     app.run(debug=True)

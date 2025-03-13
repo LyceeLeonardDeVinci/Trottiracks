@@ -72,9 +72,13 @@
             margin-top: 20px;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
 </head>
 <body>
     <h1>Liste des Slots</h1>
+    <div id="calendar"></div>
     <table>
         <thead>
             <tr>
@@ -90,7 +94,12 @@
         </tbody>
     </table>
     <a href="/" class="button">Retour à l'accueil</a>
-
+    {% if logged_in %}
+        <button id="reserve-button" class="button">Réserver</button>
+    {% endif %}
+    <div id="calendar-container" style="display: none;">
+        <div id="calendar"></div>
+    </div>
     <div id="error-message" class="error-message"></div>
 
     <script>
@@ -120,11 +129,6 @@
                         <td>${slot.id_slot}</td>
                         <td>${slot.numéro}</td>
                         <td>${slot.libre ? "Oui" : "Non"}</td>
-                        <td>
-                            <button class="update-button" onclick="toggleSlot(${slot.id_slot}, ${slot.libre})">
-                                ${slot.libre ? "Occuper" : "Libérer"}
-                            </button>
-                        </td>
                     `;
                     tableBody.appendChild(row);
                 });
@@ -134,31 +138,83 @@
             }
         }
 
-        // Fonction pour mettre à jour l'état d'un slot
-        async function toggleSlot(id, currentState) {
-            const newState = currentState ? 0 : 1; // Inverse l'état actuel
-            try {
-                const response = await fetch(`/slots/update/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `libre=${newState}`,
-                });
-                if (response.ok) {
-                    loadSlots(); // Recharge la liste des slots
-                } else {
-                    console.error('Erreur lors de la mise à jour du slot');
-                    alert('Erreur lors de la mise à jour du slot');
-                }
-            } catch (error) {
-                console.error('Erreur lors de la mise à jour du slot :', error);
-                alert('Impossible de mettre à jour le slot.');
-            }
-        }
-
         // Charge les slots au chargement de la page
         window.onload = loadSlots;
+
+        document.getElementById('reserve-button').addEventListener('click', function() {
+            document.getElementById('calendar-container').style.display = 'block';
+            $('#calendar').fullCalendar({
+                events: '/slots/api',
+                selectable: true,
+                selectHelper: true,
+                select: function(start, end) {
+                    const title = prompt('Nom de la réservation:');
+                    if (title) {
+                        const eventData = {
+                            title: title,
+                            start: start,
+                            end: end
+                        };
+                        $('#calendar').fullCalendar('renderEvent', eventData, true);
+                        // Save the reservation to the server
+                        fetch('/reserve_slot', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                title: title,
+                                start: start.format(),
+                                end: end.format()
+                            }),
+                        }).then(response => {
+                            if (!response.ok) {
+                                alert('Erreur lors de la réservation.');
+                            }
+                        });
+                    }
+                    $('#calendar').fullCalendar('unselect');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $('#calendar').fullCalendar({
+                events: '/slots/api',
+                selectable: true,
+                selectHelper: true,
+                select: function(start, end) {
+                    const title = prompt('Nom de la réservation:');
+                    if (title) {
+                        const eventData = {
+                            title: title,
+                            start: start,
+                            end: end
+                        };
+                        $('#calendar').fullCalendar('renderEvent', eventData, true);
+                        // Save the reservation to the server
+                        fetch('/reserve_slot', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                title: title,
+                                start: start.format(),
+                                end: end.format()
+                            }),
+                        }).then(response => {
+                            if (!response.ok) {
+                                alert('Erreur lors de la réservation.');
+                            }
+                        });
+                    }
+                    $('#calendar').fullCalendar('unselect');
+                }
+            });
+        });
     </script>
 </body>
 </html>
