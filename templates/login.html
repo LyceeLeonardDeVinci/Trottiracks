@@ -6,10 +6,63 @@
     <link rel="stylesheet" href="/static/style_form.css">
     <title>Se connecter</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #f9f9f9, #e0e0e0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button[type="submit"], .newcompte {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button[type="submit"]:hover, .newcompte:hover {
+            background-color: #45a049;
+        }
         .error {
             color: red;
             font-weight: bold;
             margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>

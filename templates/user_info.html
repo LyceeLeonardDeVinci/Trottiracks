@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations de l'utilisateur</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(to right, #f9f9f9, #e0e0e0);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        div {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        p {
+            font-size: 16px;
+            color: #333;
+        }
+        strong {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Informations de l'utilisateur</h1>
+    <div>
+        <p><strong>Nom :</strong> {{ user.nom }}</p>
+        <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+        <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
+        <p><strong>Classe :</strong> {{ user.classe }}</p>
+        <p><strong>Date de création :</strong> {{ user.date }}</p>
+    </div>
+</body>
+</html>

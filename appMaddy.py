@@ -30,11 +30,27 @@ def get_db_connection():
         """)
         return con
 
+# Function to create admin account if it doesn't exist
+def create_admin_account():
+    conn = get_db_connection()
+    admin_exists = conn.execute("SELECT * FROM User WHERE username = 'admin'").fetchone()
+    if not admin_exists:
+        conn.execute("""
+            INSERT INTO User (nom, prenom, username, classe, motdepasse)
+            VALUES ('Admin', 'Admin', 'admin', 'Admin', 'admin');
+        """)
+        conn.commit()
+    conn.close()
+
+# Call the function to create admin account
+create_admin_account()
+
 # Home route
 @app.route("/", methods=["GET"])
 def home():
     nom = request.cookies.get('username')
-    return render_template('accueil.html', nom=nom)
+    logged_in = nom is not None
+    return render_template('accueil.html', nom=nom, logged_in=logged_in)
 
 # Login route
 @app.route("/login", methods=["GET", "POST"])
@@ -63,6 +79,9 @@ def logout():
 # Route to display users in HTML
 @app.route("/utilisateurs", methods=["GET"])
 def get_users():
+    username = request.cookies.get('username')
+    if username != 'admin':
+        return redirect('/login')
     conn = get_db_connection()
     users = conn.execute('SELECT * FROM User;').fetchall()
     conn.close()
@@ -72,6 +91,9 @@ def get_users():
 # API route to return users in JSON
 @app.route("/utilisateurs/api", methods=["GET"])
 def get_users_api():
+    username = request.cookies.get('username')
+    if username != 'admin':
+        return jsonify({"error": "Unauthorized access"}), 403
     conn = get_db_connection()
     users = conn.execute('SELECT * FROM User;').fetchall()
     conn.close()
@@ -90,11 +112,38 @@ def supprimer_utilisateur(id_user):
 # Route to delete a user by ID
 @app.route('/utilisateurs/supprimer/<int:id>', methods=['DELETE'])
 def delete_user(id):
+    username = request.cookies.get('username')
+    if username != 'admin':
+        return jsonify({"error": "Unauthorized access"}), 403
     conn = get_db_connection()
     conn.execute("DELETE FROM User WHERE id_user = ?", (id,))
     conn.commit()
     conn.close()
     return jsonify({"message": "Utilisateur supprimé avec succès."}), 200
+
+# Route to make a user admin
+@app.route('/utilisateurs/make_admin', methods=['POST'])
+def make_admin():
+    username = request.cookies.get('username')
+    if username != 'admin':
+        return jsonify({"error": "Unauthorized access"}), 403
+
+    data = request.get_json()
+    user_to_make_admin = data.get('username')
+
+    if not user_to_make_admin:
+        return jsonify({"error": "Nom d'utilisateur non fourni"}), 400
+
+    conn = get_db_connection()
+    user = conn.execute("SELECT * FROM User WHERE username = ?", (user_to_make_admin,)).fetchone()
+    if user:
+        conn.execute("UPDATE User SET classe = 'Admin' WHERE username = ?", (user_to_make_admin,))
+        conn.commit()
+        conn.close()
+        return jsonify({"message": "Utilisateur rendu admin avec succès."}), 200
+    else:
+        conn.close()
+        return jsonify({"error": "Utilisateur non trouvé"}), 404
 
 # Route to open rack
 @app.route("/rack/ouvrir", methods=["GET"])
@@ -169,6 +218,24 @@ def submit():
         except sqlite3.IntegrityError:
             return render_template('formulaire.html', message="Le nom d'utilisateur existe déjà")
     return render_template('formulaire.html', message=message)
+
+# Route to display user information
+@app.route("/user_info", methods=["GET"])
+def user_info():
+    username = request.cookies.get('username')
+    if not username:
+        return redirect('/login')
+    
+    conn = get_db_connection()
+    user = conn.execute("SELECT * FROM User WHERE username = ?", (username,)).fetchone()
+    conn.close()
+    
+    if user:
+        user_info = dict(user)
+        user_info['date_creation'] = user['date']  # Add account creation date
+        return render_template('user_info.html', user=user_info)
+    else:
+        return redirect('/login')
 
 # Run Flask server
 if __name__ == "__main__":

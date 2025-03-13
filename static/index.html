@@ -5,28 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACCEUIL</title>
     <link rel="stylesheet" href="/static/style.css">
-
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        header {
+            background: url('/static/hero.jpg') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            padding: 100px 0;
+        }
+        nav {
+            background-color: rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        nav button {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+        nav button:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .hero {
+            padding-top: 60px; /* To avoid content being hidden behind the fixed nav */
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        footer button {
+            background-color: #444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        footer button:hover {
+            background-color: #555;
+        }
+    </style>
 </head>
 <body>
-    <section class="content">
-    </section>
-    <div>
-        
-
-    </div>
+    <nav>
+        <button onclick="window.location.href = '/slots';">Voir les racks disponible</button>
+    </nav>
     <header>
         <section class="hero">
             <h1>TROTTIRACK'S</h1>
-            <p>Le déplacement simplement. </p>
+            <p>Le déplacement simplement.</p>
         </section>
-        
-        <nav>
-            <button onclick="window.location.href = '/slots';">Voir les racks disponible</button>
-           
-        </nav>
     </header>
-
-
+    <section class="content">
+    </section>
+    <div>
+    </div>
     <footer>
         <button onclick="window.location.href = '/login';" class="footer">se connecter</button>
         <button onclick="window.location.href = '/formulaire';" class="footer">crée un compte</button>

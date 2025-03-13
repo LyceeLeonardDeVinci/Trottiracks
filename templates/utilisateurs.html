@@ -8,7 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #f9f9f9;
+            background: linear-gradient(to right, #f9f9f9, #e0e0e0);
         }
         h1 {
             color: #333;
@@ -19,6 +19,8 @@
             border-collapse: collapse;
             width: 80%;
             background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         th, td {
             border: 1px solid #ddd;
@@ -38,27 +40,22 @@
         a {
             text-decoration: none;
         }
-        #refresh-button {
+        #refresh-button, #retour-button {
             display: block;
             margin: 20px auto;
             padding: 10px 20px;
             font-size: 16px;
             color: #fff;
-            background-color: #007BFF;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #refresh-button {
+            background-color: #007BFF;
         }
         #retour-button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
             background-color: #223447;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
         #refresh-button:hover {
             background-color: #0056b3;
@@ -76,6 +73,28 @@
         }
         .delete-button:hover {
             background-color: #cc0000;
+        }
+        .admin-button {
+            padding: 5px 10px;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .admin-button:hover {
+            background-color: #218838;
+        }
+        .remove-admin-button {
+            padding: 5px 10px;
+            color: #fff;
+            background-color: #ffc107;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .remove-admin-button:hover {
+            background-color: #e0a800;
         }
     </style>
 </head>
@@ -102,7 +121,7 @@
     <a href="/">
         <button id="retour-button">Retour à l'accueil</button>
     </a>
-
+    <button id="make-admin-button" onclick="makeAdmin()">Rendre Admin</button>
 
     <script>
         // Fonction pour charger les utilisateurs via AJAX
@@ -125,7 +144,11 @@
                         <td>${user.classe || ''}</td>
                         <td>${user.date || ''}</td>
                         <td>${user.motdepasse || ''}</td>
-                        <td><button class="delete-button" onclick="deleteUser(${user.id_user})">Supprimer</button></td>
+                        <td>
+                            <button class="delete-button" onclick="deleteUser(${user.id_user})">Supprimer</button>
+                            <button class="admin-button" onclick="makeAdmin('${user.username}')">Rendre Admin</button>
+                            <button class="remove-admin-button" onclick="removeAdmin('${user.username}')">Supprimer l'Admin</button>
+                        </td>
                     `;
                     tableBody.appendChild(row);
                 });
@@ -150,6 +173,54 @@
                     }
                 } catch (error) {
                     console.error('Erreur lors de la suppression de l’utilisateur :', error);
+                }
+            }
+        }
+
+        // Fonction pour rendre un utilisateur admin
+        async function makeAdmin(username) {
+            if (confirm(`Êtes-vous sûr de vouloir rendre ${username} admin ?`)) {
+                try {
+                    const response = await fetch(`/utilisateurs/make_admin`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username }),
+                    });
+
+                    if (response.ok) {
+                        alert('Utilisateur rendu admin avec succès.');
+                        loadUsers(); // Recharger les utilisateurs après la mise à jour
+                    } else {
+                        alert('Erreur lors de la mise à jour.');
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la mise à jour de l’utilisateur :', error);
+                }
+            }
+        }
+
+        // Fonction pour supprimer le statut admin d'un utilisateur
+        async function removeAdmin(username) {
+            if (confirm(`Êtes-vous sûr de vouloir supprimer le statut admin de ${username} ?`)) {
+                try {
+                    const response = await fetch(`/utilisateurs/remove_admin`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username }),
+                    });
+
+                    if (response.ok) {
+                        alert('Statut admin supprimé avec succès.');
+                        loadUsers(); // Recharger les utilisateurs après la mise à jour
+                    } else {
+                        alert('Erreur lors de la mise à jour.');
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la mise à jour de l’utilisateur :', error);
                 }
             }
         }

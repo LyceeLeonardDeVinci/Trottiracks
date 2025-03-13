@@ -5,35 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACCEUIL</title>
     <link rel="stylesheet" href="/static/style.css">
-
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('L:/ELEVES-TSTI2D_2/SIN/DOC PROJET/static/trotti.png') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+        }
+        .hero {
+            flex: 1;
+            padding: 2em;
+            text-align: center;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+        .button {
+            display: inline-block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white; /* Change the color to white */
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            color: white; /* Change the color to white */
+        }
+        .utilisateur {
+            color: white; /* Change the color to white */
+        }
+    </style>
 </head>
 
 <body>
-   
-
-
-
-
-
     <header>
-        
         <div class="connect">
-            <button onclick="window.location.href = '/login';" class="footer">Se connecter</button>
-            {% if nom %}
-            <button class="utilisateur" onclick="window.location.href = '/formulaire';" class="footer">salut {{ nom }}</button>
+            {% if logged_in %}
+                <button onclick="window.location.href='/logout'" class="footer">Se déconnecter</button>
+            {% else %}
+                <button onclick="window.location.href = '/login';" class="footer">Se connecter</button>
             {% endif %}
-            <button onclick="window.location.href = '/utilisateurs';" class="footer">base de donnés</button>
+            {% if nom %}
+                <button class="utilisateur" onclick="window.location.href = '/user_info';" class="footer">salut {{ nom }}</button>
+            {% endif %}
+            {% if nom == 'admin' %}
+                <button onclick="window.location.href = '/utilisateurs';" class="footer">base de donnés</button>
+            {% endif %}
         </div>
-    
     </header>
     <section class="hero">
         <h1>TROTTIRACK'S</h1>
         <p>Le déplacement simplement. </p>
         <nav>
-            <button onclick="window.location.href = '/slots';">Voir les racks disponible</button>
-           
+            <button onclick="window.location.href = '/slots';" class="button">Voir les racks disponible</button>
         </nav>
-    </section>
     </section>
 
     <footer>
