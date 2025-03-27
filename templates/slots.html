@@ -103,6 +103,11 @@
     <div id="error-message" class="error-message"></div>
 
     <script>
+        async function openSlot(){
+            console.info('ouvrir !');
+            const response = await fetch('/rack/ouvrir');
+        }
+
         // Fonction pour charger les slots via AJAX
         async function loadSlots() {
             try {
@@ -129,6 +134,7 @@
                         <td>${slot.id_slot}</td>
                         <td>${slot.numéro}</td>
                         <td>${slot.libre ? "Oui" : "Non"}</td>
+                        <td><button onclick="openSlot()">Ouvre toi</button></td>
                     `;
                     tableBody.appendChild(row);
                 });

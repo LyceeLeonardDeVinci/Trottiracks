@@ -15,27 +15,26 @@ LED = 7 #Définit le numéro du port GPIO qui alimente la led
 
 GPIO.setup(LED, GPIO.OUT) #Active le contrôle du GPIO
 
-state = GPIO.input(LED) #Lit l'état actuel du GPIO, vrai si allumé, faux si éteint
-
-print("Etat", state)
-if state : #Si GPIO allumé
-    GPIO.output(LED, GPIO.LOW) #On l’éteint
-    print("Eteint")
-else : #Sinon
-    GPIO.output(LED, GPIO.HIGH) #On l'allume
-    print("Allume")
-
 
 
 @app.route("/ouvrir", methods=["GET"])
 def home():
-    # A faire : allumer diode / ouvrir rack
-    return "{ status: 'ok'}"
-    # return app.send_static_file('index.html')  # Simplement afficher le fichier index.html
+    state = GPIO.input(LED) #Lit l'état actuel du GPIO, vrai si allumé, faux si éteint
+
+    print("Etat", state)
+    if state : #Si GPIO allumé
+        GPIO.output(LED, GPIO.LOW) #On l’éteint
+        print("Eteint")
+        return "{ status: 'eteint'}"
+    else : #Sinon
+        GPIO.output(LED, GPIO.HIGH) #On l'allume
+        return "{ status: 'allume'}"
+
+    
 
 # Lancement du serveur Flask
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=False)
 
 # Si creation du serveur par gunicorn : deploiement depuis Github
 def create_app(test_config=None):

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request, redirect, make_response
 import sqlite3
 import os
+import requests
 
 app = Flask(__name__)
 
@@ -148,7 +149,9 @@ def make_admin():
 # Route to open rack
 @app.route("/rack/ouvrir", methods=["GET"])
 def ouvert():
-    return app.send_static_file('rackouvert.html')
+    r = requests.get('http://169.254.231.1:5000/ouvrir')
+    print(r) 
+    return "ouvert"
 
 # Route to display slots in HTML
 @app.route("/slots", methods=["GET"])
@@ -225,7 +228,7 @@ def user_info():
     username = request.cookies.get('username')
     if not username:
         return redirect('/login')
-    
+
     conn = get_db_connection()
     user = conn.execute("SELECT * FROM User WHERE username = ?", (username,)).fetchone()
     conn.close()
