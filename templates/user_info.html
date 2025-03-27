@@ -29,6 +29,18 @@
         strong {
             color: #555;
         }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -39,6 +51,10 @@
         <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
         <p><strong>Classe :</strong> {{ user.classe }}</p>
         <p><strong>Date de création :</strong> {{ user.date }}</p>
+    </div>
+    <div>
+        <button onclick="window.location.href='/logout';">Se déconnecter</button>
+        <button onclick="window.location.href='/';">Retour</button>
     </div>
 </body>
 </html>

@@ -73,7 +73,7 @@ def login():
 # Logout route
 @app.route("/logout", methods=["GET"])
 def logout():
-    response = make_response(render_template('login.html', message="Déconnecté avec succès."))
+    response = make_response(redirect('/login'))
     response.set_cookie('username', '', max_age=0)
     return response
 
@@ -236,7 +236,7 @@ def user_info():
     if user:
         user_info = dict(user)
         user_info['date_creation'] = user['date']  # Add account creation date
-        return render_template('user_info.html', user=user_info)
+        return render_template('user_info.html', user=user_info, logged_in=True)
     else:
         return redirect('/login')
 
