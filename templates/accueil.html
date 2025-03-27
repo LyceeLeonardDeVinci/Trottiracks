@@ -16,15 +16,18 @@
             min-height: 100vh;
         }
         header {
-            background-color: #333;
+            background-color: #33333300;
             color: white;
             padding: 1em 0;
             text-align: center;
         }
         .hero {
-            flex: 1;
+           
             padding: 2em;
             text-align: center;
+            border-radius: 10px;
+
+         
         }
         footer {
             background-color: #333;
@@ -50,10 +53,10 @@
             background-color: #0056b3;
         }
         .footer {
-            color: white; /* Change the color to white */
+            color: rgb(0, 0, 0); /* Change the color to white */
         }
         .utilisateur {
-            color: white; /* Change the color to white */
+            color: rgb(0, 0, 0); /* Change the color to white */
         }
     </style>
 </head>
@@ -67,11 +70,12 @@
                 <button onclick="window.location.href = '/login';" class="footer">Se connecter</button>
             {% endif %}
             {% if nom %}
-                <button class="utilisateur" onclick="window.location.href = '/user_info';" class="footer">salut {{ nom }}</button>
+                <button class="utilisateur" onclick="window.location.href = '/user_info';" class="footer"> {{ nom }}</button>
             {% endif %}
             {% if nom == 'admin' %}
                 <button onclick="window.location.href = '/utilisateurs';" class="footer">base de donnés</button>
             {% endif %}
+           
         </div>
     </header>
     <section class="hero">
