@@ -17,14 +17,14 @@
         table {
             margin: 0 auto;
             border-collapse: collapse;
-            width: 80%;
+            width: 100%;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 2px;
             text-align: center;
         }
         th {
@@ -37,10 +37,10 @@
         tr:hover {
             background-color: #ddd;
         }
-        .button {
+        .slot {
             display: block;
             margin: 20px auto;
-            padding: 10px 20px;
+            padding: 5px 10px;
             font-size: 16px;
             color: #fff;
             background-color: #007BFF;
@@ -51,7 +51,7 @@
             text-decoration: none;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .button:hover {
+        .slot:hover {
             background-color: #0056b3;
         }
         .update-button {
@@ -93,7 +93,6 @@
             <!-- Les lignes seront insérées ici via JavaScript -->
         </tbody>
     </table>
-    <a href="/" class="button">Retour à l'accueil</a>
     {% if logged_in %}
         <button id="reserve-button" class="button">Réserver</button>
     {% endif %}
@@ -103,9 +102,9 @@
     <div id="error-message" class="error-message"></div>
 
     <script>
-        async function openSlot(){
-            console.info('ouvrir !');
-            const response = await fetch('/rack/ouvrir');
+        async function openSlot(slotId){
+            console.info('ouvrir !', slotId);
+            const response = await fetch('/rack/ouvrir/' + slotId);
         }
 
         // Fonction pour charger les slots via AJAX
@@ -134,7 +133,7 @@
                         <td>${slot.id_slot}</td>
                         <td>${slot.numéro}</td>
                         <td>${slot.libre ? "Oui" : "Non"}</td>
-                        <td><button onclick="openSlot()">Ouvre toi</button></td>
+                        <td><button onclick="openSlot(${slot.id_slot})" class="slot" >Ouvre toi</button></td>
                     `;
                     tableBody.appendChild(row);
                 });

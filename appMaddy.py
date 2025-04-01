@@ -164,12 +164,30 @@ def make_admin():
         conn.close()
         return jsonify({"error": "Utilisateur non trouvé"}), 404
 
+
 # Route to open rack
-@app.route("/rack/ouvrir", methods=["GET"])
-def ouvert():
-    r = requests.get('http://169.254.231.1:5000/ouvrir')
+@app.route("/rack/ouvrir/1", methods=["GET"])
+def ouvert1():
+    r = requests.get('http://169.254.231.1:5000/ouvrir1')
     print(r) 
     return "ouvert"
+
+
+@app.route("/rack/ouvrir/2", methods=["GET"])
+def ouvert2():
+    r = requests.get('http://169.254.231.1:5000/ouvrir2')
+    print(r) 
+    return "ouvert"
+
+
+@app.route("/rack/ouvrir/3", methods=["GET"])
+def ouvert3():
+    r = requests.get('http://169.254.231.1:5000/ouvrir3')
+    print(r) 
+    return "ouvert"
+
+
+
 
 # Route to display slots in HTML
 @app.route("/slots", methods=["GET"])
