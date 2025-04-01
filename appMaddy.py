@@ -29,6 +29,16 @@ def get_db_connection():
                 "motdepasse" TEXT NOT NULL
             );
         """)
+        con.execute("""
+            CREATE TABLE "Reservations" (
+                "id_reservation" INTEGER PRIMARY KEY AUTOINCREMENT,
+                "title" TEXT NOT NULL,
+                "start" TEXT NOT NULL,
+                "end" TEXT NOT NULL,
+                "username" TEXT NOT NULL,
+                FOREIGN KEY(username) REFERENCES User(username)
+            );
+        """)
         return con
 
 # Function to create admin account if it doesn't exist
@@ -51,7 +61,16 @@ create_admin_account()
 def home():
     nom = request.cookies.get('username')
     logged_in = nom is not None
-    return render_template('accueil.html', nom=nom, logged_in=logged_in)
+    is_admin = False
+    if logged_in:
+        conn = get_db_connection()
+        user = conn.execute("SELECT classe FROM User WHERE username = ?", (nom,)).fetchone()
+        conn.close()
+        if user and user["classe"] == "Admin":
+            is_admin = True
+        print("Classe", user["classe"], " is_admin", is_admin)
+    print("Affiche l'accueil")
+    return render_template('accueil.html', nom=nom, logged_in=logged_in, is_admin=True)
 
 # Login route
 @app.route("/login", methods=["GET", "POST"])
@@ -81,9 +100,13 @@ def logout():
 @app.route("/utilisateurs", methods=["GET"])
 def get_users():
     username = request.cookies.get('username')
-    if username != 'admin':
+    if not username:
         return redirect('/login')
     conn = get_db_connection()
+    user = conn.execute("SELECT classe FROM User WHERE username = ?", (username,)).fetchone()
+    if not user or user["classe"] != "Admin":
+        conn.close()
+        return redirect('/login')
     users = conn.execute('SELECT * FROM User;').fetchall()
     conn.close()
     users_list = [dict(user) for user in users]
@@ -93,34 +116,29 @@ def get_users():
 @app.route("/utilisateurs/api", methods=["GET"])
 def get_users_api():
     username = request.cookies.get('username')
-    if username != 'admin':
+    if not username:
         return jsonify({"error": "Unauthorized access"}), 403
     conn = get_db_connection()
+    user = conn.execute("SELECT classe FROM User WHERE username = ?", (username,)).fetchone()
+    if not user or user["classe"] != "Admin":
+        conn.close()
+        return jsonify({"error": "Unauthorized access"}), 403
     users = conn.execute('SELECT * FROM User;').fetchall()
     conn.close()
     users_list = [dict(user) for user in users]
     return jsonify(users_list)
 
 # Route to delete a user
-@app.route('/utilisateurs/supprimer/<int:id_user>', methods=['POST'])
+@app.route('/utilisateurs/supprimer/<int:id_user>', methods=['DELETE'])
 def supprimer_utilisateur(id_user):
+    username = request.cookies.get('username')
+    if username != 'admin':
+        return jsonify({"error": "Unauthorized access"}), 403
     conn = get_db_connection()
     conn.execute('DELETE FROM User WHERE id_user = ?', (id_user,))
     conn.commit()
     conn.close()
     return jsonify({'message': f"Utilisateur avec l'ID {id_user} supprimé avec succès."}), 200
-
-# Route to delete a user by ID
-@app.route('/utilisateurs/supprimer/<int:id>', methods=['DELETE'])
-def delete_user(id):
-    username = request.cookies.get('username')
-    if username != 'admin':
-        return jsonify({"error": "Unauthorized access"}), 403
-    conn = get_db_connection()
-    conn.execute("DELETE FROM User WHERE id_user = ?", (id,))
-    conn.commit()
-    conn.close()
-    return jsonify({"message": "Utilisateur supprimé avec succès."}), 200
 
 # Route to make a user admin
 @app.route('/utilisateurs/make_admin', methods=['POST'])
@@ -268,15 +286,6 @@ def reserve_slot_post():
     conn.commit()
     conn.close()
     return jsonify({"message": "Réservation effectuée avec succès."}), 200
-
-# API route to return reserved slots in JSON
-@app.route("/slots/api", methods=["GET"])
-def get_reserved_slots_api():
-    conn = get_db_connection()
-    slots = conn.execute("SELECT * FROM Reservations;").fetchall()
-    conn.close()
-    slots_list = [dict(slot) for slot in slots]
-    return jsonify(slots_list)
 
 # Run Flask server
 if __name__ == "__main__":

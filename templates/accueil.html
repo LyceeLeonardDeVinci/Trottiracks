@@ -70,9 +70,9 @@
                 <button onclick="window.location.href = '/login';" class="footer">Se connecter</button>
             {% endif %}
             {% if nom %}
-                <button class="utilisateur" onclick="window.location.href = '/user_info';" class="footer"> {{ nom }}</button>
+                <button class="utilisateur" onclick="window.location.href = '/user_info';" class="footer">{{ nom }}</button>
             {% endif %}
-            {% if nom == 'admin' %}
+            {% if is_admin %}
                 <button onclick="window.location.href = '/utilisateurs';" class="footer">base de donnés</button>
             {% endif %}
            
