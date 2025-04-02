@@ -186,12 +186,12 @@ def ouvert3():
     print(r) 
     return "ouvert"
 
-
-
-
 # Route to display slots in HTML
 @app.route("/slots", methods=["GET"])
 def get_slots():
+    username = request.cookies.get('username')
+    if not username:
+        return redirect('/login')  # Redirect to login if not logged in
     conn = get_db_connection()
     slots = conn.execute("SELECT * FROM slots;").fetchall()
     conn.close()
