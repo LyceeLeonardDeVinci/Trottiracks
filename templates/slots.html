@@ -85,8 +85,8 @@
     <script>
         async function openSlot(slotId, button) {
             const allButtons = document.querySelectorAll('.slot');
-            if (button.textContent === "Ouvre toi") {
-                button.textContent = "Fermé";
+            if (button.textContent === "Fermé") {
+                button.textContent = "Ouvrir";
                 button.style.backgroundColor = "#218838";
 
                 allButtons.forEach(btn => {
@@ -102,7 +102,7 @@
                     resetButtonState(button, allButtons);
                 }
             } else {
-                button.textContent = "Ouvre toi";
+                button.textContent = "Fermé";
                 button.style.backgroundColor = "#007BFF";
 
                 allButtons.forEach(btn => {
@@ -113,7 +113,7 @@
         }
 
         function resetButtonState(button, allButtons) {
-            button.textContent = "Ouvre toi";
+            button.textContent = "Fermé";
             button.style.backgroundColor = "#007BFF";
 
             allButtons.forEach(btn => {
@@ -141,7 +141,7 @@
                             <td>${slot.id_slot}</td>
                             <td>${slot.numéro}</td>
                             <td>${slot.libre ? "Oui" : "Non"}</td>
-                            <td><button onclick="openSlot(${slot.id_slot}, this)" class="slot">Ouvre toi</button></td>
+                            <td><button onclick="openSlot(${slot.id_slot}, this)" class="slot">Fermé</button></td>
                         `;
                         tableBody.appendChild(row);
                     });
