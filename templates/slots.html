@@ -54,18 +54,6 @@
         .slot:hover {
             background-color: #0056b3;
         }
-        .update-button {
-            padding: 5px 10px;
-            font-size: 14px;
-            color: #fff;
-            background-color: #28a745;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .update-button:hover {
-            background-color: #218838;
-        }
         .error-message {
             color: red;
             text-align: center;
@@ -78,7 +66,6 @@
 </head>
 <body>
     <h1>Liste des Slots</h1>
-    <div id="calendar"></div>
     <table>
         <thead>
             <tr>
@@ -88,138 +75,84 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody id="slots-table-body">
-        
-            <!-- Les lignes seront insérées ici via JavaScript -->
-        </tbody>
+        <tbody id="slots-table-body"></tbody>
     </table>
     {% if logged_in %}
         <button id="reserve-button" class="button">Réserver</button>
     {% endif %}
-    <div id="calendar-container" style="display: none;">
-        <div id="calendar"></div>
-    </div>
     <div id="error-message" class="error-message"></div>
 
     <script>
-        async function openSlot(slotId){
-            console.info('ouvrir !', slotId);
-            const response = await fetch('/rack/ouvrir/' + slotId);
+        async function openSlot(slotId, button) {
+            const allButtons = document.querySelectorAll('.slot');
+            if (button.textContent === "Ouvre toi") {
+                button.textContent = "Fermé";
+                button.style.backgroundColor = "#218838";
+
+                allButtons.forEach(btn => {
+                    if (btn !== button) {
+                        btn.disabled = true;
+                        btn.style.opacity = "0.5";
+                    }
+                });
+
+                const response = await fetch('/rack/ouvrir/' + slotId);
+                if (!response.ok) {
+                    alert("Erreur lors de l'ouverture du slot.");
+                    resetButtonState(button, allButtons);
+                }
+            } else {
+                button.textContent = "Ouvre toi";
+                button.style.backgroundColor = "#007BFF";
+
+                allButtons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.style.opacity = "1";
+                });
+            }
         }
 
-        // Fonction pour charger les slots via AJAX
+        function resetButtonState(button, allButtons) {
+            button.textContent = "Ouvre toi";
+            button.style.backgroundColor = "#007BFF";
+
+            allButtons.forEach(btn => {
+                btn.disabled = false;
+                btn.style.opacity = "1";
+            });
+        }
+
         async function loadSlots() {
             try {
                 const response = await fetch('/slots/api');
-                if (!response.ok) {
-                    throw new Error("Erreur lors du chargement des slots");
-                }
+                if (!response.ok) throw new Error("Erreur lors du chargement des slots");
 
                 const slots = await response.json();
                 const tableBody = document.getElementById('slots-table-body');
-                tableBody.innerHTML = ''; // Vide le tableau avant de l'actualiser
+                tableBody.innerHTML = '';
 
-                // Vérifie si les slots sont bien reçus
                 if (slots.length === 0) {
                     document.getElementById('error-message').textContent = "Aucun slot disponible.";
                 } else {
-                    document.getElementById('error-message').textContent = ''; // Efface le message d'erreur si des slots existent
+                    document.getElementById('error-message').textContent = '';
+                    slots.forEach(slot => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${slot.id_slot}</td>
+                            <td>${slot.numéro}</td>
+                            <td>${slot.libre ? "Oui" : "Non"}</td>
+                            <td><button onclick="openSlot(${slot.id_slot}, this)" class="slot">Ouvre toi</button></td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
                 }
-
-                // Remplir le tableau avec les slots
-                slots.forEach(slot => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${slot.id_slot}</td>
-                        <td>${slot.numéro}</td>
-                        <td>${slot.libre ? "Oui" : "Non"}</td>
-                        <td><button onclick="openSlot(${slot.id_slot})" class="slot" >Ouvre toi</button></td>
-                    `;
-                    tableBody.appendChild(row);
-                });
             } catch (error) {
                 console.error('Erreur lors du chargement des slots :', error);
                 document.getElementById('error-message').textContent = "Impossible de charger les slots. Veuillez réessayer.";
             }
         }
 
-        // Charge les slots au chargement de la page
         window.onload = loadSlots;
-
-        document.getElementById('reserve-button').addEventListener('click', function() {
-            document.getElementById('calendar-container').style.display = 'block';
-            $('#calendar').fullCalendar({
-                events: '/slots/api',
-                selectable: true,
-                selectHelper: true,
-                select: function(start, end) {
-                    const title = prompt('Nom de la réservation:');
-                    if (title) {
-                        const eventData = {
-                            title: title,
-                            start: start,
-                            end: end
-                        };
-                        $('#calendar').fullCalendar('renderEvent', eventData, true);
-                        // Save the reservation to the server
-                        fetch('/reserve_slot', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                title: title,
-                                start: start.format(),
-                                end: end.format()
-                            }),
-                        }).then(response => {
-                            if (!response.ok) {
-                                alert('Erreur lors de la réservation.');
-                            }
-                        });
-                    }
-                    $('#calendar').fullCalendar('unselect');
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            $('#calendar').fullCalendar({
-                events: '/slots/api',
-                selectable: true,
-                selectHelper: true,
-                select: function(start, end) {
-                    const title = prompt('Nom de la réservation:');
-                    if (title) {
-                        const eventData = {
-                            title: title,
-                            start: start,
-                            end: end
-                        };
-                        $('#calendar').fullCalendar('renderEvent', eventData, true);
-                        // Save the reservation to the server
-                        fetch('/reserve_slot', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                title: title,
-                                start: start.format(),
-                                end: end.format()
-                            }),
-                        }).then(response => {
-                            if (!response.ok) {
-                                alert('Erreur lors de la réservation.');
-                            }
-                        });
-                    }
-                    $('#calendar').fullCalendar('unselect');
-                }
-            });
-        });
     </script>
 </body>
 </html>
